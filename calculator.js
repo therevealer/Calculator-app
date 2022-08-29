@@ -5,7 +5,8 @@ class Calculator {
         this.currentOperandText = currentOperandTextElement
         this.clear()
     }
-    
+       
+    // Methods
     clear(){
         this.previousOperand = ''
         this.currentOperand = ''
@@ -17,8 +18,8 @@ class Calculator {
     }
 
     appendNumber(number){
-        this.currentOperand = number
-
+       this.currentOperand = this.currentOperand.toString() + number.toString();
+       
     }
 
     chooseOperation(operation){
@@ -48,13 +49,14 @@ const currentOperandTextElement = document.querySelector('[data-current-operand]
 //New object inheriting properties from the Calculator class 
 const calculator =  new Calculator(previousOperandTextElement, currentOperandTextElement)
 
+
+// Loop
 numberButtons.forEach(button =>{
     button.addEventListener('click', () => {
         calculator.appendNumber(button.innerText)
         calculator.updateDisplay()
     })
 })
-
 
 // Push comment
 
