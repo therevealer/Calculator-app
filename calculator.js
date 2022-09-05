@@ -1,7 +1,7 @@
 // ES6 Class template for creating objects
 class Calculator {
     constructor(previousOperandTextElement, currentOperandTextElement) {
-        this.previousOperandText = previousOperandTextElement
+        this.previousOperandTextElement = previousOperandTextElement
         this.currentOperandTextElement = currentOperandTextElement
         this.clear()
     }
@@ -14,24 +14,59 @@ class Calculator {
     }
 
     delete(){
-
+        this.currentOperand = this.currentOperand.toString().slice(0, -1)
     }
 
     appendNumber(number){
-       this.currentOperand = this.currentOperand.toString() + number.toString();
+        if (number === "." && this.currentOperand.includes('.')) return
+        this.currentOperand = this.currentOperand.toString() + number.toString();
        
     }
 
     chooseOperation(operation){
+        if (this.currentOperand === '') return
+        if (this.previousOperand !== '') {
+            this.compute()
+        }
+        this.operation = operation
+        this.previousOperand = this.currentOperand
+        this.currentOperand = ''
 
     }
 
     compute(){
+        let computation
+        const prev = parseFloat(this.previousOperand)
+        const current = parseFloat(this.currentOperand)
+        if (isNaN (prev) || isNaN(current)) return
+
+        // switch statements
+        switch(this.operation) {
+            case '+':
+                computation = prev + current
+                break
+            case '-':
+                computation = prev - current
+                break
+            case '÷':
+                computation = prev / current
+                break
+            case '*':
+                computation = prev * current
+                break
+            default: return    
+        }
+
+        this.currentOperand = computation
+        this.previousOperand = ''
+        this.operation = undefined // ?? Check later
 
     }
 
     updateDisplay(){
-        this.currentOperandTextElement.innerText = this.currentOperand
+        
+        this.currentOperandTextElement.innerText = this.currentOperand;
+        this.previousOperandTextElement.innerText = this.previousOperand;
 
     }
 }
@@ -50,7 +85,7 @@ const currentOperandTextElement = document.querySelector('[data-current-operand]
 const calculator =  new Calculator(previousOperandTextElement, currentOperandTextElement)
 
 
-// Loop
+// Loops and event listeners
 numberButtons.forEach(button =>{
     button.addEventListener('click', () => {
         calculator.appendNumber(button.innerText)
@@ -58,5 +93,28 @@ numberButtons.forEach(button =>{
     })
 })
 
-// Push comment
+operationButtons.forEach(button =>{
+    button.addEventListener('click', () => {
+        calculator.chooseOperation(button.innerText)
+        calculator.updateDisplay()
+    })
+})
+
+equalsButton.addEventListener('click', button =>{
+    calculator.compute()
+    calculator.updateDisplay()
+})
+allClearButton.addEventListener('click', button =>{
+    calculator.clear()
+    calculator.updateDisplay()
+})
+
+
+
+// Questions
+//  How does slice() Work
+//  how does toString() work
+//  Different types of event listener
+//  Understand the this keyword
+
 
